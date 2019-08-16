@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="io.homeassistant.android.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+    <fragment
+        android:id="@+id/onboarding"
+        android:name="io.homeassistant.android.onboarding.OnboardingFragment"
+        android:label="fragment_onboarding"
+        tools:layout="@layout/fragment_onboarding" >
+        <action
+            android:id="@+id/action_onboarding_to_scanningFragment"
+            app:destination="@id/scanningFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/scanningFragment"
+        android:name="io.homeassistant.android.onboarding.ScanningFragment"
+        android:label="fragment_scanning"
+        tools:layout="@layout/fragment_scanning" />
+</navigation>

@@ -2,4 +2,12 @@
     <string name="app_name">Home Assistant</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_onboarding">Welcome To Home Assistant Companion</string>
+    <string name="subheading_onboarding">The most advanced Home Automation app on Android</string>
+    <string name="wifi_onboarding">To continue with automatic setup, please connect to your home Wi-Fi network</string>
+    <string name="continue_btn">Continue</string>
+    <string name="scanning_title">Scanning your network for Home Assistant</string>
 </resources>
