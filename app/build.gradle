@@ -52,6 +52,8 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
+    implementation 'com.airbnb.android:lottie:3.0.7'
+
     kapt 'com.google.dagger:dagger-compiler:2.20'
     implementation 'com.google.dagger:dagger:2.20'
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'

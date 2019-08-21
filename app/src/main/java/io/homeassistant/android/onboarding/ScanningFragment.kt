@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import io.homeassistant.android.R
 import io.homeassistant.android.core.NetworkDiscovery
 import io.homeassistant.android.injector
+import kotlinx.android.synthetic.main.fragment_scanning.*
 import javax.inject.Inject
 
 class ScanningFragment : Fragment() {
@@ -40,5 +41,12 @@ class ScanningFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injector().inject(this)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        animationView.setMinFrame("Circle Fill Begins")
+        animationView.setMaxFrame("Deform Begins")
+        animationView.playAnimation()
     }
 }
