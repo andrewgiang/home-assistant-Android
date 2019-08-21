@@ -1,24 +1,44 @@
 package io.homeassistant.android.onboarding
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import io.homeassistant.android.R
+import io.homeassistant.android.core.NetworkDiscovery
+import io.homeassistant.android.injector
+import javax.inject.Inject
 
 class ScanningFragment : Fragment() {
 
+    @Inject
+    lateinit var networkDiscovery: NetworkDiscovery
+
+    init {
+        lifecycleScope.launchWhenResumed {
+            val services = networkDiscovery.getServices(5000)
+
+            findNavController().navigate(
+                ScanningFragmentDirections.toDiscoveredInstances(
+                    services.toTypedArray()
+                )
+            )
+        }
+    }
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_scanning, container, false)
-
-        //TODO import lottie and use the loading animation from iOS
-
     }
 
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        injector().inject(this)
+    }
 }

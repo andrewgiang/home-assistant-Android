@@ -6,29 +6,17 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:padding="@dimen/defaultPadding"
-    tools:context=".onboarding.ScanningFragment">
+    tools:context=".onboarding.DiscoveredInstancesFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/foundInstances"
         style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/scanning_title"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/found_instances" />
 </androidx.constraintlayout.widget.ConstraintLayout>

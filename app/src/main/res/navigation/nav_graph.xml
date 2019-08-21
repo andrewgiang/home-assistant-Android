@@ -16,12 +16,25 @@
         android:label="fragment_onboarding"
         tools:layout="@layout/fragment_onboarding" >
         <action
-            android:id="@+id/action_onboarding_to_scanningFragment"
+            android:id="@+id/to_scanningFragment"
             app:destination="@id/scanningFragment" />
     </fragment>
     <fragment
         android:id="@+id/scanningFragment"
         android:name="io.homeassistant.android.onboarding.ScanningFragment"
         android:label="fragment_scanning"
-        tools:layout="@layout/fragment_scanning" />
+        tools:layout="@layout/fragment_scanning" >
+        <action
+            android:id="@+id/to_discovered_instances"
+            app:destination="@id/discoveredInstances" />
+    </fragment>
+    <fragment
+        android:id="@+id/discoveredInstances"
+        android:name="io.homeassistant.android.onboarding.DiscoveredInstancesFragment"
+        android:label="fragment_discovered_instances"
+        tools:layout="@layout/fragment_discovered_instances" >
+        <argument
+            android:name="instances"
+            app:argType="io.homeassistant.android.data.model.HomeAssistantInstance[]" />
+    </fragment>
 </navigation>
