@@ -40,5 +40,8 @@ class ScanningFragment : Fragment(R.layout.fragment_scanning) {
         animationView.setMinFrame("Circle Fill Begins")
         animationView.setMaxFrame("Deform Begins")
         animationView.playAnimation()
+        enterManuallyButton.setOnClickListener {
+            findNavController().navigate(ScanningFragmentDirections.toManualConfigurationFragment())
+        }
     }
 }

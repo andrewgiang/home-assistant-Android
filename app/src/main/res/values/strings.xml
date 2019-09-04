@@ -15,6 +15,9 @@
 
     <string name="enter_address_manually">Enter Address Manually</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="manual_configure_msg">Please enter your Home Assistant URL to continue.
+        It must be a fully formed URL of the format "http://hassio.local:8123"
+        (that is, containing a scheme/protocol, hostname and port).</string>
+    <string name="manual_configuration_header">Manual Configuration</string>
+    <string name="connect">Connect</string>
 </resources>

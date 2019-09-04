@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,9 @@ class DiscoveredInstancesFragment : Fragment(R.layout.fragment_discovered_instan
         )
         recyclerView.adapter = InstanceAdapter(args.instances)
         recyclerView.layoutManager = LinearLayoutManager(context)
+        enterManuallyButton.setOnClickListener {
+            findNavController().navigate(DiscoveredInstancesFragmentDirections.toManualConfigurationFragment())
+        }
     }
 }
 
