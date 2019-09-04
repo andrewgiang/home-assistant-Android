@@ -1,17 +1,20 @@
 <resources>
+    <plurals name="found_instances">
+        <item quantity="one">We found %1$d Home Assistant on your network.</item>
+        <item quantity="other">We found %1$d Home Assistants on your network.</item>
+    </plurals>
     <string name="app_name">Home Assistant</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
-    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="welcome_onboarding">Welcome To Home Assistant Companion</string>
     <string name="subheading_onboarding">The most advanced Home Automation app on Android</string>
     <string name="wifi_onboarding">To continue with automatic setup, please connect to your home Wi-Fi network</string>
     <string name="continue_btn">Continue</string>
     <string name="scanning_title">Scanning your network for Home Assistant</string>
+
     <string name="enter_address_manually">Enter Address Manually</string>
 
-    <plurals name="found_instances">
-        <item quantity="one">We found %1$d Home Assistant on your network.</item>
-        <item quantity="other">We found %1$d Home Assistants on your network.</item>
-    </plurals>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

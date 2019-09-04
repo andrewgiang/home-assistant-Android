@@ -35,6 +35,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_scanningFragment_to_manualConfigurationFragment"
+            app:destination="@id/manualConfigurationFragment" />
     </fragment>
     <fragment
         android:id="@+id/discoveredInstances"
@@ -44,5 +47,13 @@
         <argument
             android:name="instances"
             app:argType="io.homeassistant.android.data.model.HomeAssistantInstance[]" />
+        <action
+            android:id="@+id/action_discoveredInstances_to_manualConfigurationFragment"
+            app:destination="@id/manualConfigurationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/manualConfigurationFragment"
+        android:name="io.homeassistant.android.onboarding.ManualConfigurationFragment"
+        android:label="fragment_manual_configuration"
+        tools:layout="@layout/fragment_manual_configuration" />
 </navigation>
