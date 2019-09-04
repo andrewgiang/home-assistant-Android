@@ -16,7 +16,7 @@ class NetworkDiscovery @Inject constructor(
 ) {
     private val scope = MainScope()
 
-    suspend fun getServices(delayMillis: Long): List<HomeAssistantInstance> =
+    suspend fun getServices(discoverWaitMillis: Long): List<HomeAssistantInstance> =
         suspendCancellableCoroutine { continuation ->
             scope.launch {
                 val instances = mutableListOf<HomeAssistantInstance>()
@@ -27,7 +27,7 @@ class NetworkDiscovery @Inject constructor(
                     NsdManager.PROTOCOL_DNS_SD,
                     discoveryCallback
                 )
-                delay(delayMillis)
+                delay(discoverWaitMillis)
                 continuation.resume(instances)
                 nsdManager.stopServiceDiscovery(discoveryCallback)
             }
@@ -49,7 +49,7 @@ class NetworkDiscovery @Inject constructor(
 
             override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) {
                 Log.d(tag, "onStartDiscoveryFailed")
-                continuation.resumeWithException(DiscoverFailed())
+                continuation.resumeWithException(DiscoveryFailed())
             }
 
             override fun onDiscoveryStarted(serviceType: String?) {
@@ -88,4 +88,3 @@ class NetworkDiscovery @Inject constructor(
     }
 
 }
-

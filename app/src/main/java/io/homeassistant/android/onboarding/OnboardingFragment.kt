@@ -21,11 +21,12 @@ class OnboardingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         animationView.setMaxFrame("Circles Formed")
         animationView.playAnimation()
         continueBtn.setOnClickListener {
             findNavController().navigate(OnboardingFragmentDirections.toScanningFragment())
         }
     }
+
+    //TODO hide or show wifi warning depending on network status
 }

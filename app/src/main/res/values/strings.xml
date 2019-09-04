@@ -8,5 +8,10 @@
     <string name="wifi_onboarding">To continue with automatic setup, please connect to your home Wi-Fi network</string>
     <string name="continue_btn">Continue</string>
     <string name="scanning_title">Scanning your network for Home Assistant</string>
-    <string name="found_instances">We found %1$d Home Assistants on your network</string>
+    <string name="enter_address_manually">Enter Address Manually</string>
+
+    <plurals name="found_instances">
+        <item quantity="one">We found %1$d Home Assistant on your network.</item>
+        <item quantity="other">We found %1$d Home Assistants on your network.</item>
+    </plurals>
 </resources>
