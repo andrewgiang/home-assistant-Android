@@ -25,13 +25,13 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/wifi"
+        app:layout_constraintBottom_toTopOf="@+id/wifiMessage"
         app:layout_constraintEnd_toStartOf="@+id/verticalRight"
         app:layout_constraintStart_toStartOf="@+id/veritcalLeft"
         app:layout_constraintTop_toBottomOf="@+id/welcome" />
 
     <TextView
-        android:id="@+id/wifi"
+        android:id="@+id/wifiMessage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:alpha=".5"
@@ -87,7 +87,7 @@
         app:layout_constraintBottom_toTopOf="@+id/continueBtn"
         app:layout_constraintEnd_toStartOf="@+id/verticalRight"
         app:layout_constraintStart_toStartOf="@+id/veritcalLeft"
-        app:layout_constraintTop_toBottomOf="@+id/wifi"
+        app:layout_constraintTop_toBottomOf="@+id/wifiMessage"
         app:lottie_rawRes="@raw/ha_loading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

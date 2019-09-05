@@ -26,7 +26,16 @@ class DiscoveredInstancesFragment : Fragment(R.layout.fragment_discovered_instan
             args.instances.size,
             args.instances.size
         )
-        recyclerView.adapter = InstanceAdapter(args.instances)
+        recyclerView.adapter =
+            InstanceAdapter(args.instances, object : OnInstanceClicked {
+                override fun onClick(homeAssistantInstance: HomeAssistantInstance) {
+                    findNavController().navigate(
+                        DiscoveredInstancesFragmentDirections.toAuthFragment(
+                            homeAssistantInstance
+                        )
+                    )
+                }
+            })
         recyclerView.layoutManager = LinearLayoutManager(context)
         enterManuallyButton.setOnClickListener {
             findNavController().navigate(DiscoveredInstancesFragmentDirections.toManualConfigurationFragment())
@@ -34,12 +43,20 @@ class DiscoveredInstancesFragment : Fragment(R.layout.fragment_discovered_instan
     }
 }
 
-class InstanceAdapter(private val instances: Array<HomeAssistantInstance>) :
+interface OnInstanceClicked {
+    fun onClick(homeAssistantInstance: HomeAssistantInstance)
+}
+
+class InstanceAdapter(
+    private val instances: Array<HomeAssistantInstance>,
+    private val onInstanceClicked: OnInstanceClicked
+) :
     RecyclerView.Adapter<InstanceAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.instance_item_layout, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, onInstanceClicked)
     }
 
     override fun getItemCount(): Int {
@@ -50,13 +67,14 @@ class InstanceAdapter(private val instances: Array<HomeAssistantInstance>) :
         holder.bindView(instances[position])
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, private val onInstanceClicked: OnInstanceClicked) :
+        RecyclerView.ViewHolder(view) {
         private val nameTextView: TextView = view.findViewById(R.id.instanceTextView)
         private val urlTextView: TextView = view.findViewById(R.id.urlTextView)
 
         fun bindView(item: HomeAssistantInstance) {
             itemView.setOnClickListener {
-
+                onInstanceClicked.onClick(item)
             }
             nameTextView.text = item.name
             urlTextView.text = item.baseUrl

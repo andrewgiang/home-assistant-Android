@@ -21,6 +21,25 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+            <!-- Manually register intent filter due to navigation library generating
+            extra path which does not work with our callback -->
+
+                <action
+                    android:name="android.intent.action.VIEW" />
+
+                <category
+                    android:name="android.intent.category.DEFAULT" />
+
+                <category
+                    android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="homeassistant" />
+
+                <data
+                    android:host="auth-callback" />
+
+            </intent-filter>
         </activity>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"

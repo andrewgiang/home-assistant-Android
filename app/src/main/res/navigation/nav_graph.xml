@@ -44,16 +44,37 @@
         android:name="io.homeassistant.android.onboarding.DiscoveredInstancesFragment"
         android:label="fragment_discovered_instances"
         tools:layout="@layout/fragment_discovered_instances">
-        <argument
-            android:name="instances"
-            app:argType="io.homeassistant.android.data.model.HomeAssistantInstance[]" />
         <action
             android:id="@+id/toManualConfigurationFragment"
             app:destination="@id/manualConfigurationFragment" />
+        <action
+            android:id="@+id/toAuthFragment"
+            app:destination="@id/authenticationFragment" />
+        <argument
+            android:name="instances"
+            app:argType="io.homeassistant.android.data.model.HomeAssistantInstance[]" />
     </fragment>
     <fragment
         android:id="@+id/manualConfigurationFragment"
         android:name="io.homeassistant.android.onboarding.ManualConfigurationFragment"
         android:label="fragment_manual_configuration"
         tools:layout="@layout/fragment_manual_configuration" />
+    <fragment
+        android:id="@+id/authenticationFragment"
+        android:name="io.homeassistant.android.onboarding.AuthenticationFragment"
+        android:label="fragment_authentication"
+        tools:layout="@layout/fragment_authentication">
+        <argument
+            android:name="instance"
+            app:argType="io.homeassistant.android.data.model.HomeAssistantInstance" />
+    </fragment>
+    <fragment
+        android:id="@+id/authDeeplinkFragment"
+        android:name="io.homeassistant.android.onboarding.AuthDeeplinkFragment"
+        android:label="fragment_auth_deeplink"
+        tools:layout="@layout/fragment_auth_deeplink">
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="homeassistant://auth-callback?code={code}" />
+    </fragment>
 </navigation>
