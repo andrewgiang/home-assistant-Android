@@ -17,12 +17,12 @@ class NetworkDiscovery @Inject constructor(val nsdManager: NsdManager) {
     suspend fun start(discoverWaitMillis: Long): List<HomeAssistantInstance> {
         val instances = mutableListOf<HomeAssistantInstance>()
         val discoveryCallback = startDiscovery(instances)
-        val registerListener = startPublish()
+        val publishCallback = startPublish()
 
         delay(discoverWaitMillis)
 
         nsdManager.stopServiceDiscovery(discoveryCallback)
-        nsdManager.unregisterService(registerListener)
+        nsdManager.unregisterService(publishCallback)
         return instances
     }
 
