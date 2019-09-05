@@ -3,8 +3,10 @@ package io.homeassistant.android.core
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
+import io.homeassistant.android.BuildConfig
 import io.homeassistant.android.data.model.HomeAssistantInstance
 import kotlinx.coroutines.*
+import java.util.*
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -27,11 +29,50 @@ class NetworkDiscovery @Inject constructor(
                     NsdManager.PROTOCOL_DNS_SD,
                     discoveryCallback
                 )
+                val nsp = NsdServiceInfo().apply {
+                    serviceName = android.os.Build.MODEL
+                    serviceType = "_hass-mobile-app._tcp"
+                    port = 65535
+                    setAttribute("buildNumber", BuildConfig.VERSION_NAME)
+                    setAttribute("versionNumber", BuildConfig.VERSION_CODE.toString())
+                    setAttribute("permanentID", UUID.randomUUID().toString())
+
+                }
+                val registerListener = registerListener()
+                nsdManager.registerService(
+                    nsp,
+                    NsdManager.PROTOCOL_DNS_SD,
+                    registerListener
+                )
                 delay(discoverWaitMillis)
                 continuation.resume(instances)
                 nsdManager.stopServiceDiscovery(discoveryCallback)
+                nsdManager.unregisterService(registerListener)
             }
         }
+
+    private fun registerListener(): NsdManager.RegistrationListener {
+        return object : NsdManager.RegistrationListener {
+            override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
+                Log.d(tag, "onUnregistrationFailed + $serviceInfo : $errorCode")
+            }
+
+            override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
+                Log.d(tag, "onServiceUnregistered + $serviceInfo ")
+
+            }
+
+            override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
+                Log.d(tag, "onRegistrationFailed + $serviceInfo : $errorCode")
+
+            }
+
+            override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {
+                Log.d(tag, "onServiceRegistered + $serviceInfo")
+            }
+
+        }
+    }
 
     private fun discoveryListener(
         resolveCallback: NsdManager.ResolveListener,
@@ -84,6 +125,8 @@ class NetworkDiscovery @Inject constructor(
             attrMap[key] = String(value, Charsets.UTF_8)
         }
         attrMap["name"] = serviceInfo?.serviceName.orEmpty()
+        attrMap["announcedFrom"] = serviceInfo?.host?.hostAddress.orEmpty()
+        Log.d(tag, "announcedFrom ${attrMap["announcedFrom"]}")
         return attrMap
     }
 
