@@ -2,6 +2,7 @@ package io.homeassistant.android.core
 
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
+import android.os.Build
 import android.util.Log
 import io.homeassistant.android.BuildConfig
 import io.homeassistant.android.data.model.HomeAssistantInstance
@@ -15,6 +16,17 @@ class NetworkDiscovery @Inject constructor(val nsdManager: NsdManager) {
 
     suspend fun start(discoverWaitMillis: Long): List<HomeAssistantInstance> {
         val instances = mutableListOf<HomeAssistantInstance>()
+        val discoveryCallback = startDiscovery(instances)
+        val registerListener = startPublish()
+
+        delay(discoverWaitMillis)
+
+        nsdManager.stopServiceDiscovery(discoveryCallback)
+        nsdManager.unregisterService(registerListener)
+        return instances
+    }
+
+    private fun startDiscovery(instances: MutableList<HomeAssistantInstance>): NsdManager.DiscoveryListener {
         val resolveCallback = resolveListener(instances)
         val discoveryCallback = discoveryListener(resolveCallback)
         nsdManager.discoverServices(
@@ -22,8 +34,12 @@ class NetworkDiscovery @Inject constructor(val nsdManager: NsdManager) {
             NsdManager.PROTOCOL_DNS_SD,
             discoveryCallback
         )
+        return discoveryCallback
+    }
+
+    private fun startPublish(): NsdManager.RegistrationListener {
         val nsp = NsdServiceInfo().apply {
-            serviceName = android.os.Build.MODEL
+            serviceName = Build.MODEL
             serviceType = "_hass-mobile-app._tcp"
             port = 65535
             setAttribute("buildNumber", BuildConfig.VERSION_NAME)
@@ -36,10 +52,7 @@ class NetworkDiscovery @Inject constructor(val nsdManager: NsdManager) {
             NsdManager.PROTOCOL_DNS_SD,
             registerListener
         )
-        delay(discoverWaitMillis)
-        nsdManager.stopServiceDiscovery(discoveryCallback)
-        nsdManager.unregisterService(registerListener)
-        return instances
+        return registerListener
     }
 
     private fun registerListener(): NsdManager.RegistrationListener {
@@ -55,7 +68,6 @@ class NetworkDiscovery @Inject constructor(val nsdManager: NsdManager) {
 
             override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
                 Log.d(tag, "onRegistrationFailed + $serviceInfo : $errorCode")
-
             }
 
             override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {
