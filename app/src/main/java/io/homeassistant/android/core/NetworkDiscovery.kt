@@ -5,51 +5,42 @@ import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import io.homeassistant.android.BuildConfig
 import io.homeassistant.android.data.model.HomeAssistantInstance
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
 import java.util.*
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 const val tag = "NetworkDiscovery"
 
-class NetworkDiscovery @Inject constructor(
-    val nsdManager: NsdManager
-) {
-    private val scope = MainScope()
+class NetworkDiscovery @Inject constructor(val nsdManager: NsdManager) {
 
-    suspend fun getServices(discoverWaitMillis: Long): List<HomeAssistantInstance> =
-        suspendCancellableCoroutine { continuation ->
-            scope.launch {
-                val instances = mutableListOf<HomeAssistantInstance>()
-                val resolveCallback = resolveListener(instances)
-                val discoveryCallback = discoveryListener(resolveCallback, continuation)
-                nsdManager.discoverServices(
-                    "_home-assistant._tcp",
-                    NsdManager.PROTOCOL_DNS_SD,
-                    discoveryCallback
-                )
-                val nsp = NsdServiceInfo().apply {
-                    serviceName = android.os.Build.MODEL
-                    serviceType = "_hass-mobile-app._tcp"
-                    port = 65535
-                    setAttribute("buildNumber", BuildConfig.VERSION_NAME)
-                    setAttribute("versionNumber", BuildConfig.VERSION_CODE.toString())
-                    setAttribute("permanentID", UUID.randomUUID().toString())
-
-                }
-                val registerListener = registerListener()
-                nsdManager.registerService(
-                    nsp,
-                    NsdManager.PROTOCOL_DNS_SD,
-                    registerListener
-                )
-                delay(discoverWaitMillis)
-                continuation.resume(instances)
-                nsdManager.stopServiceDiscovery(discoveryCallback)
-                nsdManager.unregisterService(registerListener)
-            }
+    suspend fun start(discoverWaitMillis: Long): List<HomeAssistantInstance> {
+        val instances = mutableListOf<HomeAssistantInstance>()
+        val resolveCallback = resolveListener(instances)
+        val discoveryCallback = discoveryListener(resolveCallback)
+        nsdManager.discoverServices(
+            "_home-assistant._tcp",
+            NsdManager.PROTOCOL_DNS_SD,
+            discoveryCallback
+        )
+        val nsp = NsdServiceInfo().apply {
+            serviceName = android.os.Build.MODEL
+            serviceType = "_hass-mobile-app._tcp"
+            port = 65535
+            setAttribute("buildNumber", BuildConfig.VERSION_NAME)
+            setAttribute("versionNumber", BuildConfig.VERSION_CODE.toString())
+            setAttribute("permanentID", UUID.randomUUID().toString())
         }
+        val registerListener = registerListener()
+        nsdManager.registerService(
+            nsp,
+            NsdManager.PROTOCOL_DNS_SD,
+            registerListener
+        )
+        delay(discoverWaitMillis)
+        nsdManager.stopServiceDiscovery(discoveryCallback)
+        nsdManager.unregisterService(registerListener)
+        return instances
+    }
 
     private fun registerListener(): NsdManager.RegistrationListener {
         return object : NsdManager.RegistrationListener {
@@ -75,8 +66,7 @@ class NetworkDiscovery @Inject constructor(
     }
 
     private fun discoveryListener(
-        resolveCallback: NsdManager.ResolveListener,
-        continuation: CancellableContinuation<List<HomeAssistantInstance>>
+        resolveCallback: NsdManager.ResolveListener
     ): NsdManager.DiscoveryListener {
         return object : NsdManager.DiscoveryListener {
             override fun onServiceFound(serviceInfo: NsdServiceInfo?) {
@@ -90,7 +80,7 @@ class NetworkDiscovery @Inject constructor(
 
             override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) {
                 Log.d(tag, "onStartDiscoveryFailed")
-                continuation.resumeWithException(DiscoveryFailed())
+                throw DiscoveryFailed()
             }
 
             override fun onDiscoveryStarted(serviceType: String?) {
