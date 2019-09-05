@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:padding="@dimen/defaultPadding"
-    tools:context=".onboarding.OnboardingFragment">
+    tools:context=".onboarding.WelcomeFragment">
 
     <Button
         android:id="@+id/continueBtn"

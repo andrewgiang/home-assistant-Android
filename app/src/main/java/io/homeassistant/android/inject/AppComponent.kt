@@ -3,6 +3,7 @@ package io.homeassistant.android.inject
 import dagger.Component
 import io.homeassistant.android.onboarding.ManualConfigurationFragment
 import io.homeassistant.android.onboarding.ScanningFragment
+import io.homeassistant.android.onboarding.WelcomeFragment
 import javax.inject.Singleton
 
 @Singleton
@@ -10,4 +11,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(scanningFragment: ScanningFragment)
     fun inject(fragment: ManualConfigurationFragment)
+    fun inject(welcomeFragment: WelcomeFragment)
 }

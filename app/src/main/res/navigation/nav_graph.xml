@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_main" />
     <fragment
         android:id="@+id/onboarding"
-        android:name="io.homeassistant.android.onboarding.OnboardingFragment"
+        android:name="io.homeassistant.android.onboarding.WelcomeFragment"
         android:label="fragment_onboarding"
-        tools:layout="@layout/fragment_onboarding">
+        tools:layout="@layout/fragment_welcome">
         <action
             android:id="@+id/to_scanningFragment"
             app:destination="@id/scanningFragment"

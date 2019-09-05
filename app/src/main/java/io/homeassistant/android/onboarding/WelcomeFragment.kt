@@ -14,50 +14,62 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import io.homeassistant.android.R
-import kotlinx.android.synthetic.main.fragment_onboarding.*
+import io.homeassistant.android.core.observeNavigationEvents
+import io.homeassistant.android.injector
+import kotlinx.android.synthetic.main.fragment_welcome.*
+import javax.inject.Inject
 
-class OnboardingFragment : Fragment(R.layout.fragment_onboarding) {
+class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
+    private val viewModel: WelcomeViewModel by activityViewModels()
+
+    @Inject
+    lateinit var connectivityManager: ConnectivityManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        injector().inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        animationView.setMaxFrame("Circles Formed")
-        animationView.playAnimation()
+
+        viewModel.navigation.observeNavigationEvents(viewLifecycleOwner, findNavController())
+        viewModel.ui.observe(viewLifecycleOwner) { uiState ->
+            if (uiState.startAnimation) {
+                animationView.setMaxFrame("Circles Formed")
+                animationView.playAnimation()
+            }
+            showWifiMessage(!uiState.isWifiConnected)
+        }
 
         continueBtn.setOnClickListener {
-            if (wifiMessage.visibility != View.VISIBLE) {
-                findNavController().navigate(OnboardingFragmentDirections.toScanningFragment())
-            } else {
-                findNavController().navigate(R.id.manualConfigurationFragment)
-            }
+            viewModel.onContinueClick()
         }
 
         listenForNetworkChange()
     }
 
     private val broadcastReceiver = object : BroadcastReceiver() {
-
         override fun onReceive(context: Context?, intent: Intent?) {
-            val connectivityManager = requireContext().getSystemService<ConnectivityManager>()
-            connectivityManager?.getNetworkInfo(ConnectivityManager.TYPE_WIFI)?.let { networkInfo ->
-                showWifiMessage(!networkInfo.isConnected)
+            connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)?.let { networkInfo ->
+                viewModel.setIsWifiConnected(networkInfo.isConnected)
             }
         }
 
     }
 
     private fun showWifiMessage(shouldShow: Boolean) {
-
         wifiMessage.animate().alpha(if (shouldShow) 1f else 0f).withEndAction {
             wifiMessage.visibility = if (shouldShow) View.VISIBLE else View.INVISIBLE
         }
     }
 
     private fun listenForNetworkChange() {
-        val connectivityManager = requireContext().getSystemService<ConnectivityManager>()
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             requireActivity().registerReceiver(
                 broadcastReceiver,
@@ -67,17 +79,17 @@ class OnboardingFragment : Fragment(R.layout.fragment_onboarding) {
             val networkRequest = NetworkRequest.Builder()
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .build()
-            connectivityManager?.registerNetworkCallback(
+            connectivityManager.registerNetworkCallback(
                 networkRequest,
                 object : ConnectivityManager.NetworkCallback() {
                     override fun onAvailable(network: Network?) {
                         super.onAvailable(network)
-                        showWifiMessage(false)
+                        viewModel.setIsWifiConnected(true)
                     }
 
                     override fun onLost(network: Network?) {
                         super.onLost(network)
-                        showWifiMessage(true)
+                        viewModel.setIsWifiConnected(false)
                     }
                 }, Handler(Looper.getMainLooper())
             )
